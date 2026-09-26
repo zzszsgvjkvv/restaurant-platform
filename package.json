@@ -2,11 +2,11 @@
   "name": "hiro-restaurant-platform",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+ "main": "dist/server.js",
   "scripts": {
-  "dev": "ts-node src/server.ts",
-  "build": "tsc",
-  "start": "node dist/server.js"
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "dev": "ts-node src/server.ts"
   },
   "keywords": [],
   "author": "",
