@@ -1,19 +1,83 @@
 import Customer, { ICustomer } from '../models/Customer';
+import jwt from 'jsonwebtoken';
 
-export class CustomerService {
-  // Registers a new customer in the database
-  static async createCustomer(customerData: Partial<ICustomer>): Promise<ICustomer> {
-    const existingCustomer = await Customer.findOne({ email: customerData.email ??"" });
-    if (existingCustomer) {
+export class AuthService {
+  static async signup(data: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    password: string;
+    phone: string;
+    savedAddresses?: any[];
+    paymentMethods?: any[];
+  }) {
+    const existing = await Customer.findOne({ email: data.email });
+    if (existing) {
       throw new Error('Customer with this email already exists');
     }
-    
-    const customer = new Customer(customerData);
-    return await customer.save();
+
+    const customer = new Customer({
+      firstName: data.firstName,
+      lastName: data.lastName,
+      email: data.email,
+      password: data.password,
+      phone: data.phone,
+      // Optional at signup, added later if provided
+      savedAddresses: data.savedAddresses || [],
+      paymentMethods: data.paymentMethods || []
+    });
+
+    await customer.save();
+
+    const token = this.generateToken(customer._id.toString(), customer.email);
+    return { customer, token };
   }
 
-  // Fetches customer profile by ID
-  static async getCustomerById(id: string): Promise<ICustomer | null> {
-    return await Customer.findById(id);
+  static async login(email: string, pass: string) {
+    const customer = await Customer.findOne({ email }).select('+password');
+    if (!customer) {
+      throw new Error('Invalid email or password');
+    }
+
+    const isMatch = await customer.comparePassword(pass);
+    if (!isMatch) {
+      throw new Error('Invalid email or password');
+    }
+
+    const token = this.generateToken(customer._id.toString(), customer.email);
+    
+    // Omit password from output
+    const userObj = customer.toObject();
+    delete (userObj as any).password;
+
+    return { customer: userObj, token };
+  }
+
+  private static generateToken(id: string, email: string): string {
+    return jwt.sign({ id, email }, process.env.JWT_SECRET || 'fallback_secret', {
+      expiresIn: '7d'
+    });
+  }
+}
+
+
+
+
+import Restaurant from '../models/Restaurant';
+import Product from '../models/Product';
+
+export class CatalogService {
+  // Fetch active restaurants and branches
+  static async getRestaurants() {
+    return await Restaurant.find({ status: 'active' });
+  }
+
+  // Fetch products, optionally filtered by restaurant or branch
+  static async getProducts(filter: { restaurantId?: string; category?: string }) {
+    const query: any = { isAvailable: true };
+    if (filter.restaurantId) query.restaurantId = filter.restaurantId;
+    if (filter.category) query.category = filter.category;
+
+    return await Product.find(query).populate('restaurantId', 'name logoUrl');
   }
 }
