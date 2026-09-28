@@ -16,15 +16,11 @@ app.use(express.json());
 connectDB();
 
 
-// Public API Base Path
 
-// Routes
-app.use('/api/v1/auth', authRoutes);
-       // Register / Login / Profile
+app.use('/api/v1/public', publicRoutes);     // Customer read-only
+app.use('/api/v1/auth', authRoutes);         // Register / Login / Profile
 app.use('/api/v1/admin', adminRoutes);       // Admin restaurant management
-app.use('/api/v1/products', productRoutes);  // Product CRUD operations
-
-
+app.use('/api/v1/products', productRoutes);
 
 
 
