@@ -1,37 +1,4 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || (function () {
-    var ownKeys = function(o) {
-        ownKeys = Object.getOwnPropertyNames || function (o) {
-            var ar = [];
-            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
-            return ar;
-        };
-        return ownKeys(o);
-    };
-    return function (mod) {
-        if (mod && mod.__esModule) return mod;
-        var result = {};
-        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
-        __setModuleDefault(result, mod);
-        return result;
-    };
-})();
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -39,24 +6,27 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.upload = void 0;
 const multer_1 = __importDefault(require("multer"));
 const cloudinary_1 = require("cloudinary");
-const MulterStorageCloudinary = __importStar(require("multer-storage-cloudinary"));
-// const { CloudinaryStorage } = (MulterStorageCloudinary as any) || {};
-const CloudinaryStorage = MulterStorageCloudinary.CloudinaryStorage || MulterStorageCloudinary;
+const multer_storage_cloudinary_1 = require("multer-storage-cloudinary");
 cloudinary_1.v2.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME || '',
     api_key: process.env.CLOUDINARY_API_KEY || '',
     api_secret: process.env.CLOUDINARY_API_SECRET || '',
 });
-const storage = new CloudinaryStorage({
+const storage = new multer_storage_cloudinary_1.CloudinaryStorage({
     cloudinary: cloudinary_1.v2,
-    params: async (req, file) => {
-        return {
-            folder: 'hiro_platform',
-            allowed_formats: ['jpg', 'png', 'jpeg', 'webp'],
-            transformation: [{ width: 1000, crop: 'limit' }],
-            public_id: `${Date.now()}-${file.originalname.split('.')[0]}`,
-        };
-    },
+    params: {
+        folder: 'hiro_platform',
+        allowed_formats: ['jpg', 'png', 'jpeg', 'webp'],
+        transformation: [{ width: 1000, crop: 'limit' }],
+        public_id: (req, file) => {
+            // إزالة المسافات والامتداد من اسم الملف الأصلي لمنع أخطاء الروابط
+            const cleanName = file.originalname.split('.')[0].replace(/\s+/g, '_');
+            return `${Date.now()}-${cleanName}`;
+        },
+    }, // استخدام 'as any' هنا يحمي الإعدادات من تضارب حزم الأنواع (Types) المتغيرة لـ Cloudinary
 });
-exports.upload = (0, multer_1.default)({ storage });
+exports.upload = (0, multer_1.default)({
+    storage: storage,
+    limits: { fileSize: 5 * 1024 * 1024 } // حد أقصى 5 ميجابايت للملف
+});
 //# sourceMappingURL=upload.js.map
