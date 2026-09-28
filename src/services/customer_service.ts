@@ -1,6 +1,7 @@
-import Customer, { ICustomer } from '../models/Customer';
+import Customer  from '../models/Customer';
 import jwt from 'jsonwebtoken';
-
+import Restaurant from '../models/Restaurant';
+import Product from '../models/Product';
 export class AuthService {
   static async signup(data: {
     firstName: string;
@@ -23,7 +24,7 @@ export class AuthService {
       password: data.password,
       phone: data.phone,
       // Optional at signup, added later if provided
-      savedAddresses: data.savedAddresses || [],
+      savedAddresses: data.savedAddresses || [], 
       paymentMethods: data.paymentMethods || []
     });
 
@@ -63,13 +64,17 @@ export class AuthService {
 
 
 
-import Restaurant from '../models/Restaurant';
-import Product from '../models/Product';
+
 
 export class CatalogService {
   // Fetch active restaurants and branches
   static async getRestaurants() {
     return await Restaurant.find({ status: 'active' });
+  }
+    static async CreateRestaurants() {
+        
+      // CLOUDINARY_URL=cloudinary://576411536873293:**********@cjjr5a65
+ 
   }
 
   // Fetch products, optionally filtered by restaurant or branch

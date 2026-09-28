@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
-import { AuthService } from '../services/customer_service';
-import { CatalogService } from '../services/customer_service';
+import { AuthService, CatalogService } from '../services/customer_service';
 
 export class CustomerController {
   // POST /api/v1/customer/signup
@@ -47,10 +46,20 @@ export class CustomerController {
       res.status(500).json({ success: false, message: error.message });
     }
   }
+    static async CreateRestaurants(req: Request, res: Response) {
+    try {
+      
+      const restaurants = await CatalogService.CreateRestaurants();
+      res.status(200).json({ success: true, data: restaurants });
+    } catch (error: any) {
+      res.status(500).json({ success: false, message: error.message });
+    }
+  }
 
   // GET /api/v1/customer/products
   static async getProducts(req: Request, res: Response) {
     try {
+      
       const { restaurantId, category } = req.query;
       const products = await CatalogService.getProducts({
         restaurantId: restaurantId as string,
