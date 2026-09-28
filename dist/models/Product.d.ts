@@ -1,21 +1,15 @@
-import mongoose, { Document } from 'mongoose';
-export interface IProductOption {
-    name: string;
-    extraPrice: number;
-}
+import { Schema, Document } from 'mongoose';
 export interface IProduct extends Document {
-    restaurantId: mongoose.Types.ObjectId;
-    branchId?: mongoose.Types.ObjectId;
+    restaurantId: Schema.Types.ObjectId;
     name: string;
-    description: string;
-    imageUrl?: string;
+    description?: string;
     price: number;
     category: string;
+    imageUrl?: string;
     isAvailable: boolean;
-    options?: IProductOption[];
 }
-declare const _default: mongoose.Model<IProduct, {}, {}, {}, Document<unknown, {}, IProduct, {}, mongoose.DefaultSchemaOptions> & IProduct & Required<{
-    _id: mongoose.Types.ObjectId;
+declare const _default: import("mongoose").Model<IProduct, {}, {}, {}, Document<unknown, {}, IProduct, {}, import("mongoose").DefaultSchemaOptions> & IProduct & Required<{
+    _id: import("mongoose").Types.ObjectId;
 }> & {
     __v: number;
 } & {

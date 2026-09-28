@@ -1,40 +1,26 @@
-import mongoose, { Document, Schema } from 'mongoose';
-
-export interface IProductOption {
-  name: string; // e.g. "Cheese", "Size"
-  extraPrice: number;
-}
+import { Schema, model, Document } from 'mongoose';
 
 export interface IProduct extends Document {
-  restaurantId: mongoose.Types.ObjectId;
-  branchId?: mongoose.Types.ObjectId;
+  restaurantId: Schema.Types.ObjectId;
   name: string;
-  description: string;
-  imageUrl?: string;
+  description?: string;
   price: number;
   category: string;
+  imageUrl?: string;
   isAvailable: boolean;
-  options?: IProductOption[];
 }
 
 const productSchema = new Schema<IProduct>(
   {
-    restaurantId: { type: Schema.Types.ObjectId, ref: 'Restaurant', required: true },
-    branchId: { type: Schema.Types.ObjectId, ref: 'Restaurant.branches' },
-    name: { type: String, required: true },
-    description: { type: String, default: '' },
+    restaurantId: { type: Schema.Types.ObjectId, ref: 'Restaurant', required: true, index: true },
+    name: { type: String, required: true, trim: true },
+    description: { type: String },
+    price: { type: Number, required: true, min: 0 },
+    category: { type: String, required: true, index: true },
     imageUrl: { type: String },
-    price: { type: Number, required: true },
-    category: { type: String, required: true },
     isAvailable: { type: Boolean, default: true },
-    options: [
-      {
-        name: String,
-        extraPrice: { type: Number, default: 0 }
-      }
-    ]
   },
   { timestamps: true }
 );
 
-export default mongoose.model<IProduct>('Product', productSchema);
+export default model<IProduct>('Product', productSchema);

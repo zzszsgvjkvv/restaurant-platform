@@ -3,11 +3,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CatalogService = exports.AuthService = void 0;
+exports.AuthService = void 0;
 const Customer_1 = __importDefault(require("../models/Customer"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const Restaurant_1 = __importDefault(require("../models/Restaurant"));
-const Product_1 = __importDefault(require("../models/Product"));
 class AuthService {
     static async signup(data) {
         const existing = await Customer_1.default.findOne({ email: data.email });
@@ -50,23 +48,4 @@ class AuthService {
     }
 }
 exports.AuthService = AuthService;
-class CatalogService {
-    // Fetch active restaurants and branches
-    static async getRestaurants() {
-        return await Restaurant_1.default.find({ status: 'active' });
-    }
-    static async CreateRestaurants() {
-        // CLOUDINARY_URL=cloudinary://576411536873293:**********@cjjr5a65
-    }
-    // Fetch products, optionally filtered by restaurant or branch
-    static async getProducts(filter) {
-        const query = { isAvailable: true };
-        if (filter.restaurantId)
-            query.restaurantId = filter.restaurantId;
-        if (filter.category)
-            query.category = filter.category;
-        return await Product_1.default.find(query).populate('restaurantId', 'name logoUrl');
-    }
-}
-exports.CatalogService = CatalogService;
 //# sourceMappingURL=customer_service.js.map

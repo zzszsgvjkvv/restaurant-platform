@@ -1,5 +1,7 @@
 import { Request, Response } from 'express';
-import { AuthService, CatalogService } from '../services/customer_service';
+import { AuthService } from '../services/customer_service';
+import { CatalogService } from '../services/catalogService';
+
 import 'multer'
 export class CustomerController {
   // POST /api/v1/customer/signup
@@ -49,8 +51,8 @@ export class CustomerController {
     static async CreateRestaurants(req: Request, res: Response) {
     try {
       
-      const restaurants = await CatalogService.CreateRestaurants();
-      res.status(200).json({ success: true, data: restaurants });
+      // const restaurants = await CatalogService.CreateRestaurants();
+      // res.status(200).json({ success: true, data: restaurants });
     } catch (error: any) {
       res.status(500).json({ success: false, message: error.message });
     }

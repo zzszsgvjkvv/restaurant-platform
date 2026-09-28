@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CustomerController = void 0;
 const customer_service_1 = require("../services/customer_service");
+const catalogService_1 = require("../services/catalogService");
 require("multer");
 class CustomerController {
     // POST /api/v1/customer/signup
@@ -39,7 +40,7 @@ class CustomerController {
     // GET /api/v1/customer/restaurants
     static async getRestaurants(req, res) {
         try {
-            const restaurants = await customer_service_1.CatalogService.getRestaurants();
+            const restaurants = await catalogService_1.CatalogService.getRestaurants();
             res.status(200).json({ success: true, data: restaurants });
         }
         catch (error) {
@@ -48,8 +49,8 @@ class CustomerController {
     }
     static async CreateRestaurants(req, res) {
         try {
-            const restaurants = await customer_service_1.CatalogService.CreateRestaurants();
-            res.status(200).json({ success: true, data: restaurants });
+            // const restaurants = await CatalogService.CreateRestaurants();
+            // res.status(200).json({ success: true, data: restaurants });
         }
         catch (error) {
             res.status(500).json({ success: false, message: error.message });
@@ -59,7 +60,7 @@ class CustomerController {
     static async getProducts(req, res) {
         try {
             const { restaurantId, category } = req.query;
-            const products = await customer_service_1.CatalogService.getProducts({
+            const products = await catalogService_1.CatalogService.getProducts({
                 restaurantId: restaurantId,
                 category: category
             });

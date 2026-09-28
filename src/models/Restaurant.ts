@@ -1,41 +1,24 @@
-import mongoose, { Document, Schema } from 'mongoose';
-
-export interface IBranch {
-  _id?: string;
-  name: string;
-  address: string;
-  location?: { lat: number; lng: number };
-  phone: string;
-  isOpen: boolean;
-}
+import { Schema, model, Document } from 'mongoose';
 
 export interface IRestaurant extends Document {
   name: string;
-  description: string;
+  description?: string;
   logoUrl?: string;
   cuisine: string[];
-  status: 'pending' | 'active' | 'suspended';
-  branches: IBranch[];
+  isActive: boolean;
+  ownerId?: Schema.Types.ObjectId;
 }
-
-const branchSchema = new Schema<IBranch>({
-  name: { type: String, required: true },
-  address: { type: String, required: true },
-  location: { lat: Number, lng: Number },
-  phone: { type: String, required: true },
-  isOpen: { type: Boolean, default: true }
-});
 
 const restaurantSchema = new Schema<IRestaurant>(
   {
-    name: { type: String, required: true },
-    description: { type: String, default: '' },
+    name: { type: String, required: true, trim: true },
+    description: { type: String, trim: true },
     logoUrl: { type: String },
     cuisine: [{ type: String }],
-    status: { type: String, enum: ['pending', 'active', 'suspended'], default: 'active' },
-    branches: [branchSchema]
+    isActive: { type: Boolean, default: true },
+    ownerId: { type: Schema.Types.ObjectId, ref: 'User' },
   },
   { timestamps: true }
 );
 
-export default mongoose.model<IRestaurant>('Restaurant', restaurantSchema);
+export default model<IRestaurant>('Restaurant', restaurantSchema);

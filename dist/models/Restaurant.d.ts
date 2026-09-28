@@ -1,25 +1,14 @@
-import mongoose, { Document } from 'mongoose';
-export interface IBranch {
-    _id?: string;
-    name: string;
-    address: string;
-    location?: {
-        lat: number;
-        lng: number;
-    };
-    phone: string;
-    isOpen: boolean;
-}
+import { Schema, Document } from 'mongoose';
 export interface IRestaurant extends Document {
     name: string;
-    description: string;
+    description?: string;
     logoUrl?: string;
     cuisine: string[];
-    status: 'pending' | 'active' | 'suspended';
-    branches: IBranch[];
+    isActive: boolean;
+    ownerId?: Schema.Types.ObjectId;
 }
-declare const _default: mongoose.Model<IRestaurant, {}, {}, {}, Document<unknown, {}, IRestaurant, {}, mongoose.DefaultSchemaOptions> & IRestaurant & Required<{
-    _id: mongoose.Types.ObjectId;
+declare const _default: import("mongoose").Model<IRestaurant, {}, {}, {}, Document<unknown, {}, IRestaurant, {}, import("mongoose").DefaultSchemaOptions> & IRestaurant & Required<{
+    _id: import("mongoose").Types.ObjectId;
 }> & {
     __v: number;
 } & {
