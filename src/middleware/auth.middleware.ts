@@ -1,6 +1,12 @@
 import { Request, Response, NextFunction } from 'express';
-import jwt from 'jsonwebtoken';
+import jwt, { JwtPayload as BuiltInJwtPayload } from 'jsonwebtoken';
 
+export interface JwtPayload extends BuiltInJwtPayload {
+  id: string;
+  email: string;
+  role: 'admin' | 'user';
+  restaurantId?: string;
+}
 export interface JwtPayload {
   id: string;
   email: string;
@@ -24,10 +30,11 @@ export const authenticate = (req: AuthRequest, res: Response, next: NextFunction
   const token = authHeader.split(' ')[1];
 
   try {
+    // FIX: Cast via 'unknown' first to resolve the overlap error safely
     const decoded = jwt.verify(
-      token,
+      token||"",
       process.env.JWT_SECRET || 'fallback_secret'
-    ) as JwtPayload;
+    ) as unknown as JwtPayload;
 
     req.user = decoded;
     next();
