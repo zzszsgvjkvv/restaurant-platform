@@ -1,11 +1,11 @@
 import { Request, Response } from 'express';
 import { OwnerService } from '../services/owner';
-
+import 'multer'; 
 export class OwnerController {
   // POST /api/v1/owner/restaurants
   static async createRestaurant(req: Request, res: Response) {
-    try {
-      const logoUrl = req.file?.path; // Cloudinary image URL
+  try {
+      const logoUrl = req.file?.path; // Now TypeScript recognizes req.file
       const data = typeof req.body.data === 'string' ? JSON.parse(req.body.data) : req.body;
 
       const restaurant = await OwnerService.createRestaurant(data, logoUrl);
@@ -13,6 +13,7 @@ export class OwnerController {
     } catch (error: any) {
       res.status(400).json({ success: false, message: error.message });
     }
+  
   }
 
   // POST /api/v1/owner/restaurants/:id/branches
