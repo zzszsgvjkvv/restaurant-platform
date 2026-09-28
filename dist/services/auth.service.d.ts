@@ -1,3 +1,4 @@
+import { Schema } from 'mongoose';
 import { IUser } from '../models/User';
 export declare class AuthService {
     private static generateToken;
@@ -14,7 +15,7 @@ export declare class AuthService {
             name: string;
             email: string;
             role: "admin" | "user";
-            restaurantId: import("mongoose").Schema.Types.ObjectId | undefined;
+            restaurantId: Schema.Types.ObjectId | undefined;
         };
     }>;
     static login(email: string, password: string): Promise<{
@@ -24,7 +25,7 @@ export declare class AuthService {
             name: string;
             email: string;
             role: "admin" | "user";
-            restaurantId: import("mongoose").Schema.Types.ObjectId | undefined;
+            restaurantId: Schema.Types.ObjectId | undefined;
         };
     }>;
     static getProfile(userId: string): Promise<import("mongoose").Document<unknown, {}, IUser, {}, import("mongoose").DefaultSchemaOptions> & IUser & Required<{
