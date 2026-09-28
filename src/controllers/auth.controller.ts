@@ -28,6 +28,7 @@ export class AuthController {
         return;
       }
 
+
       const result = await AuthService.login(email, password);
       res.status(200).json({ success: true, ...result });
     } catch (error: any) {

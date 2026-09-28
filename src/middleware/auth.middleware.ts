@@ -27,14 +27,19 @@ export const authenticate = (req: AuthRequest, res: Response, next: NextFunction
     return;
   }
 
+  // FIX 1: Access the index [1] directly and guarantee it's a string
   const token = authHeader.split(' ')[1];
 
+  if (!token) {
+    res.status(401).json({ success: false, message: 'Access denied. Malformed token format.' });
+    return;
+  }
+
+  // FIX 2: Explicitly isolate the secret as a clean string variable
+  const secret: string = process.env.JWT_SECRET || 'fallback_secret';
+
   try {
-    // FIX: Cast via 'unknown' first to resolve the overlap error safely
-    const decoded = jwt.verify(
-      token||"",
-      process.env.JWT_SECRET || 'fallback_secret'
-    ) as unknown as JwtPayload;
+    const decoded = jwt.verify(token, secret) as unknown as JwtPayload;
 
     req.user = decoded;
     next();
@@ -42,6 +47,7 @@ export const authenticate = (req: AuthRequest, res: Response, next: NextFunction
     res.status(401).json({ success: false, message: 'Invalid or expired token.' });
   }
 };
+
 
 // 2. Authorize Roles (RBAC)
 export const authorize = (...roles: ('admin' | 'user')[]) => {
