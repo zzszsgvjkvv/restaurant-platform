@@ -1,7 +1,7 @@
 import multer from 'multer';
 import { v2 as cloudinary } from 'cloudinary';
-const { CloudinaryStorage } = require('multer-storage-cloudinary');
-
+// CHANGED: Replaced require syntax with modern TypeScript named import
+import { CloudinaryStorage } from 'multer-storage-cloudinary';
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME || '',
   api_key: process.env.CLOUDINARY_API_KEY || '',
