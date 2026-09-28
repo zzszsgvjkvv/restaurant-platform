@@ -1,5 +1,8 @@
 import Restaurant, { IRestaurant, IBranch } from '../models/Restaurant';
 import Product, { IProduct } from '../models/Product';
+import { Request, Response } from 'express';
+import 'multer'; 
+// import { OwnerService } from '../services/customer_service';
 
 export class OwnerService {
   // 1. Create Restaurant
