@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { AuthService, CatalogService } from '../services/customer_service';
-
+import 'multer'
 export class CustomerController {
   // POST /api/v1/customer/signup
   static async signup(req: Request, res: Response) {

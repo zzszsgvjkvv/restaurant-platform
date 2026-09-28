@@ -18,7 +18,7 @@ router.get('/products', CustomerController.getProducts);
 
 router.post('/restaurants', upload.single('logo'), OwnerController.createRestaurant);
 router.put('/restaurants/:id', upload.single('logo'), OwnerController.updateRestaurant);
-router.post('/restaurants/:id/branches', OwnerController.addBranch);
+// router.post('/restaurants/:id/branches', OwnerController.createRestaurant);
 
 // Products
 router.post('/products', upload.single('image'), OwnerController.createProduct);

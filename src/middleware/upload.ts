@@ -10,11 +10,11 @@ cloudinary.config({
 
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
-  params: async (req: Express.Request, file: Express.Multer.File) => {
+  params: async (req: any, file: any) => {
     return {
       folder: 'hiro_platform',
       allowed_formats: ['jpg', 'png', 'jpeg', 'webp'],
-      transformation: [{ width: 1000, crop: 'limit' }], // Auto-resize large photos
+      transformation: [{ width: 1000, crop: 'limit' }],
       public_id: `${Date.now()}-${file.originalname.split('.')[0]}`,
     };
   },
