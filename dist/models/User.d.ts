@@ -5,6 +5,7 @@ export interface IUser extends Document {
     password: string;
     role: 'admin' | 'user';
     restaurantId?: Schema.Types.ObjectId;
+    comparePassword(candidatePassword: string): Promise<boolean>;
 }
 declare const _default: import("mongoose").Model<IUser, {}, {}, {}, Document<unknown, {}, IUser, {}, import("mongoose").DefaultSchemaOptions> & IUser & Required<{
     _id: import("mongoose").Types.ObjectId;

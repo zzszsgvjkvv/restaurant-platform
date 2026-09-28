@@ -11,6 +11,7 @@ export class PublicController {
       res.status(500).json({ success: false, message: error.message });
     }
   }
+  
 
   // GET /api/v1/public/restaurants/:id
   static async getRestaurantMenu(req: Request, res: Response) {
