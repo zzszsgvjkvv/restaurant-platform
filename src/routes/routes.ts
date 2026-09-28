@@ -17,11 +17,11 @@ router.get('/products', CustomerController.getProducts);
 
 
 router.post('/restaurants', upload.single('logo'), OwnerController.createRestaurant);
-router.put('/restaurants/:id', upload.single('logo'), OwnerController.updateRestaurant);
-// router.post('/restaurants/:id/branches', OwnerController.createRestaurant);
+// router.put('/restaurants/:id', upload.single('logo'), OwnerController.updateRestaurant);
+router.post('/restaurants/:id/branches', OwnerController.createRestaurant); 
 
 // Products
-router.post('/products', upload.single('image'), OwnerController.createProduct);
-router.put('/products/:id', upload.single('image'), OwnerController.updateProduct);
+// router.post('/products', upload.single('image'), OwnerController.createProduct);
+// router.put('/products/:id', upload.single('image'), OwnerController.updateProduct);
 
 export default router;
