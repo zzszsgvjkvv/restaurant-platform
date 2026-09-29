@@ -6,13 +6,40 @@ class AdminController {
     // POST /api/v1/admin/restaurants
     static async createRestaurant(req, res) {
         try {
-            const logoUrl = req.file?.path;
-            const data = typeof req.body.data === 'string' ? JSON.parse(req.body.data) : req.body;
+            // 1. التقاط الرابط بطريقة مرنة (تغطية الحالات المختلفة لـ Multer Cloudinary)
+            const file = req.file;
+            const logoUrl = file?.path || file?.secure_url || file?.url;
+            // 2. معالجة وتأمين استخراج البيانات القادمة من multipart/form-data
+            let data;
+            if (req.body.data) {
+                try {
+                    data = typeof req.body.data === 'string' ? JSON.parse(req.body.data) : req.body.data;
+                }
+                catch (parseError) {
+                    res.status(400).json({
+                        success: false,
+                        message: 'Invalid JSON format provided in the "data" field.'
+                    });
+                    return;
+                }
+            }
+            else {
+                // إذا أرسل العميل الحقول مفرودة مباشرة في الـ body دون تغليفها بكلمة data
+                data = req.body;
+            }
+            // 3. التحقق من وجود البيانات الأساسية قبل إرسالها للـ Service
+            if (!data || Object.keys(data).length === 0) {
+                res.status(400).json({ success: false, message: 'Restaurant data is missing.' });
+                return;
+            }
+            // 4. تنفيذ عملية الحفظ في قاعدة البيانات
             const restaurant = await admin_service_1.AdminService.createRestaurant(data, logoUrl);
+            // 5. إرجاع الرد بصيغة JSON فوراً وإغلاق الطلب بنجاح
             res.status(201).json({ success: true, data: restaurant });
         }
         catch (error) {
-            res.status(400).json({ success: false, message: error.message });
+            console.error("❌ Create Restaurant Controller Error:", error);
+            res.status(500).json({ success: false, message: error.message || 'Internal Server Error' });
         }
     }
     // PUT /api/v1/admin/restaurants/:id

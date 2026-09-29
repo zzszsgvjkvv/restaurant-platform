@@ -5,6 +5,8 @@ import User from '../models/User';
 
 export class AdminService {
     // CREATE Restaurant (Admin Only)
+   
+   
     static async createRestaurant(data: Partial<IRestaurant>, logoUrl?: string) {
         const restaurant = new Restaurant({
             ...data,
